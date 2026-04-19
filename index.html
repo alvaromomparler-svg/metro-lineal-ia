@@ -20,24 +20,29 @@
     background: linear-gradient(180deg, #74b9ff 0%, #0a3d62 100%);
     min-height: 100vh;
     color: var(--crema);
-    padding: 12px;
+    padding: 6px 8px;
   }
   header {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   header h1 {
-    font-size: clamp(20px, 5vw, 32px);
-    margin-bottom: 4px;
+    font-size: clamp(15px, 3.8vw, 22px);
+    margin-bottom: 0;
+    font-weight: 700;
   }
   header p {
-    font-size: clamp(12px, 3vw, 16px);
-    opacity: 0.9;
+    font-size: clamp(11px, 2.4vw, 13px);
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+  @media (max-width: 480px) {
+    header p { display: none; }
   }
   .layout {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 8px;
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -46,16 +51,16 @@
   }
   .escena {
     background: rgba(10, 61, 98, 0.4);
-    border-radius: 16px;
-    padding: 12px;
+    border-radius: 12px;
+    padding: 6px;
     backdrop-filter: blur(6px);
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   }
   .panel {
     background: rgba(245, 243, 231, 0.97);
     color: var(--gris);
-    border-radius: 16px;
-    padding: 16px;
+    border-radius: 12px;
+    padding: 12px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   }
   svg {
@@ -130,18 +135,18 @@
   /* Tabs de navegación entre apartados */
   nav.tabs {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     justify-content: center;
-    margin-bottom: 14px;
+    margin-bottom: 6px;
     flex-wrap: wrap;
   }
   nav.tabs button {
     background: rgba(255,255,255,0.15);
     color: white;
-    border: 2px solid rgba(255,255,255,0.25);
-    padding: 10px 18px;
-    border-radius: 24px;
-    font-size: 15px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    padding: 5px 12px;
+    border-radius: 18px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
