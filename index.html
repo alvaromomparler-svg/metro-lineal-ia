@@ -402,80 +402,107 @@
           </linearGradient>
         </defs>
         <!-- Cielo -->
-        <rect x="0" y="0" width="700" height="280" fill="url(#cielo)"/>
+        <rect x="0" y="0" width="700" height="295" fill="url(#cielo)"/>
         <!-- Agua -->
-        <rect x="0" y="280" width="700" height="120" fill="url(#aguaPartes)"/>
+        <rect x="0" y="295" width="700" height="105" fill="url(#aguaPartes)"/>
         <!-- Olas -->
-        <path d="M 0 280 Q 50 273 100 280 T 200 280 T 300 280 T 400 280 T 500 280 T 600 280 T 700 280"
+        <path d="M 0 295 Q 50 289 100 295 T 200 295 T 300 295 T 400 295 T 500 295 T 600 295 T 700 295"
               stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none"/>
-        <path d="M 0 290 Q 50 285 100 290 T 200 290 T 300 290 T 400 290 T 500 290 T 600 290 T 700 290"
+        <path d="M 0 305 Q 50 300 100 305 T 200 305 T 300 305 T 400 305 T 500 305 T 600 305 T 700 305"
               stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/>
 
-        <!-- ===== BARCO (vista lateral) ===== -->
-        <!-- Driza (cable que iza la vela) -->
-        <line id="p_driza" class="parte" x1="340" y1="50" x2="360" y2="170"
+        <!-- ===== VELERO MODERNO (vista lateral) ===== -->
+
+        <!-- Estay de proa (forestay) y backstay: jarcia fija -->
+        <line x1="340" y1="38" x2="120" y2="266" stroke="#2c3e50" stroke-width="1" opacity="0.45" pointer-events="none"/>
+        <line x1="340" y1="22" x2="585" y2="266" stroke="#2c3e50" stroke-width="1" opacity="0.45" pointer-events="none"/>
+
+        <!-- Driza (cabo que iza la vela mayor) -->
+        <line id="p_driza" class="parte" x1="347" y1="28" x2="355" y2="190"
               stroke="#2c3e50" stroke-width="1.5" data-parte="driza"/>
 
-        <!-- Vela mayor -->
-        <path id="p_mayor" class="parte" d="M 340 50 L 340 230 L 530 240 Q 420 160 340 50 Z"
+        <!-- Vela mayor con tope cuadrado (square-top) y sables completos -->
+        <path id="p_mayor" class="parte"
+              d="M 340 22 L 340 252 L 558 258 Q 575 155 515 72 Q 440 25 340 22 Z"
               fill="#fdfdfd" stroke="#2c3e50" stroke-width="2" data-parte="mayor"/>
-        <!-- Foque -->
-        <path id="p_foque" class="parte" d="M 340 60 L 340 220 L 200 220 Z"
+        <!-- Sables horizontales (sólo decoración) -->
+        <line x1="342" y1="80"  x2="548" y2="92"  stroke="#aab" stroke-width="0.8" opacity="0.55" pointer-events="none"/>
+        <line x1="342" y1="130" x2="557" y2="148" stroke="#aab" stroke-width="0.8" opacity="0.55" pointer-events="none"/>
+        <line x1="342" y1="185" x2="560" y2="205" stroke="#aab" stroke-width="0.8" opacity="0.55" pointer-events="none"/>
+
+        <!-- Foque/génova -->
+        <path id="p_foque" class="parte"
+              d="M 340 40 L 340 240 L 120 265 Z"
               fill="#fafafa" stroke="#2c3e50" stroke-width="2" data-parte="foque"/>
 
-        <!-- Mástil -->
-        <line id="p_mastil" class="parte" x1="340" y1="40" x2="340" y2="260"
-              stroke="#2c3e50" stroke-width="6" stroke-linecap="round" data-parte="mastil"/>
+        <!-- Mástil (alto y fino, como los de fibra/aluminio modernos) -->
+        <line id="p_mastil" class="parte" x1="340" y1="20" x2="340" y2="265"
+              stroke="#2c3e50" stroke-width="4.5" stroke-linecap="round" data-parte="mastil"/>
 
         <!-- Botavara -->
-        <line id="p_botavara" class="parte" x1="340" y1="240" x2="535" y2="245"
-              stroke="#2c3e50" stroke-width="6" stroke-linecap="round" data-parte="botavara"/>
+        <line id="p_botavara" class="parte" x1="340" y1="255" x2="555" y2="258"
+              stroke="#2c3e50" stroke-width="5" stroke-linecap="round" data-parte="botavara"/>
 
-        <!-- Escota de mayor (cabo que va de la botavara a la bañera) -->
-        <path id="p_escota" class="parte" d="M 530 245 Q 500 290 470 295"
-              stroke="#34495e" stroke-width="2.5" fill="none" stroke-dasharray="0" data-parte="escota"/>
+        <!-- Escota de mayor -->
+        <path id="p_escota" class="parte" d="M 550 258 Q 535 285 515 292"
+              stroke="#34495e" stroke-width="2.5" fill="none" data-parte="escota"/>
 
-        <!-- Casco (lateral) -->
+        <!-- Casco moderno: proa y popa a plomo, francobordo bajo -->
         <path id="p_casco" class="parte"
-              d="M 120 260 L 580 260 Q 600 260 595 280 L 560 320 Q 520 340 340 340 Q 180 340 140 320 L 115 285 Q 110 260 120 260 Z"
-              fill="url(#cascoGrad)" stroke="#2c3e50" stroke-width="2.5" data-parte="casco"/>
+              d="M 118 268 L 585 268 L 587 295 Q 582 310 572 315 L 160 318 Q 135 313 118 300 L 118 268 Z"
+              fill="url(#cascoGrad)" stroke="#2c3e50" stroke-width="2" data-parte="casco"/>
+
+        <!-- Chine line (línea de quiebre típica de cascos modernos) -->
+        <line x1="122" y1="288" x2="582" y2="290" stroke="rgba(44,62,80,0.35)" stroke-width="0.8" pointer-events="none"/>
 
         <!-- Línea de flotación -->
-        <line x1="125" y1="310" x2="590" y2="310" stroke="rgba(44,62,80,0.25)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="120" y1="302" x2="585" y2="302" stroke="rgba(44,62,80,0.25)" stroke-width="1" stroke-dasharray="4 3" pointer-events="none"/>
 
-        <!-- Cubierta (franja superior del casco) -->
+        <!-- Cubierta -->
         <path id="p_cubierta" class="parte"
-              d="M 135 260 L 565 260 Q 575 260 573 268 L 140 268 Q 133 268 135 260 Z"
-              fill="#c19060" stroke="#8b6914" stroke-width="1" data-parte="cubierta"/>
+              d="M 125 268 L 580 268 L 580 273 L 125 273 Z"
+              fill="#ecf0f1" stroke="#95a5a6" stroke-width="0.5" data-parte="cubierta"/>
 
-        <!-- Cabina -->
+        <!-- Candeleros y guardamancebos (decoración) -->
+        <g pointer-events="none" opacity="0.75">
+          <line x1="160" y1="268" x2="160" y2="252" stroke="#7f8c8d" stroke-width="1.3"/>
+          <line x1="200" y1="268" x2="200" y2="252" stroke="#7f8c8d" stroke-width="1.3"/>
+          <line x1="475" y1="268" x2="475" y2="252" stroke="#7f8c8d" stroke-width="1.3"/>
+          <line x1="560" y1="268" x2="560" y2="252" stroke="#7f8c8d" stroke-width="1.3"/>
+          <line x1="160" y1="253" x2="560" y2="254" stroke="#7f8c8d" stroke-width="0.9"/>
+          <line x1="160" y1="260" x2="560" y2="261" stroke="#7f8c8d" stroke-width="0.9"/>
+        </g>
+
+        <!-- Cabina (coach roof bajo y alargado) -->
         <path id="p_cabina" class="parte"
-              d="M 285 230 Q 285 220 295 220 L 400 220 Q 410 220 410 230 L 410 260 L 285 260 Z"
-              fill="#95a5a6" stroke="#2c3e50" stroke-width="1.5" data-parte="cabina"/>
-        <!-- Ventanas cabina -->
-        <rect x="295" y="230" width="25" height="18" fill="#3498db" opacity="0.7"/>
-        <rect x="325" y="230" width="25" height="18" fill="#3498db" opacity="0.7"/>
-        <rect x="355" y="230" width="25" height="18" fill="#3498db" opacity="0.7"/>
-        <rect x="385" y="230" width="18" height="18" fill="#3498db" opacity="0.7"/>
+              d="M 215 248 Q 215 241 225 240 L 430 240 Q 445 242 455 250 L 455 268 L 215 268 Z"
+              fill="#bdc3c7" stroke="#2c3e50" stroke-width="1.5" data-parte="cabina"/>
+        <!-- Ventana corrida (sólo decoración) -->
+        <path d="M 225 248 Q 225 245 230 245 L 445 250 L 445 262 L 225 262 Z"
+              fill="#1a5276" opacity="0.85" pointer-events="none"/>
+        <line x1="290" y1="247" x2="290" y2="262" stroke="#bdc3c7" stroke-width="1" pointer-events="none"/>
+        <line x1="350" y1="248" x2="350" y2="262" stroke="#bdc3c7" stroke-width="1" pointer-events="none"/>
+        <line x1="410" y1="249" x2="410" y2="262" stroke="#bdc3c7" stroke-width="1" pointer-events="none"/>
 
-        <!-- Bañera (hueco donde va la tripulación) -->
+        <!-- Bañera grande y abierta -->
         <path id="p_banera" class="parte"
-              d="M 420 260 L 510 260 L 500 290 L 430 290 Z"
+              d="M 465 268 L 555 268 L 550 292 L 472 292 Z"
               fill="#6b3410" stroke="#2c3e50" stroke-width="1.5" data-parte="banera"/>
 
         <!-- Caña del timón -->
-        <line id="p_cana" class="parte" x1="505" y1="275" x2="560" y2="265"
-              stroke="#8b6914" stroke-width="5" stroke-linecap="round" data-parte="cana"/>
+        <line id="p_cana" class="parte" x1="550" y1="278" x2="498" y2="275"
+              stroke="#8b6914" stroke-width="4.5" stroke-linecap="round" data-parte="cana"/>
 
-        <!-- Timón (bajo el casco) -->
+        <!-- Timón spade (pala profunda y desprendida del casco) -->
         <path id="p_timon" class="parte"
-              d="M 540 320 L 555 320 L 558 360 L 537 360 Z"
+              d="M 560 315 L 575 315 L 577 378 L 553 378 Z"
               fill="#7f8c8d" stroke="#2c3e50" stroke-width="1.5" data-parte="timon"/>
 
-        <!-- Quilla -->
-        <path id="p_quilla" class="parte"
-              d="M 300 338 L 380 338 L 380 380 Q 380 392 368 392 L 312 392 Q 300 392 300 380 Z"
+        <!-- Quilla moderna: fin profunda + bulbo de plomo (T-keel) -->
+        <rect class="parte" x="320" y="315" width="45" height="58"
               fill="#7f8c8d" stroke="#2c3e50" stroke-width="1.5" data-parte="quilla"/>
+        <ellipse class="parte" cx="342" cy="378" rx="58" ry="9"
+              fill="#2c3e50" stroke="#1a252f" stroke-width="1.2" data-parte="quilla"/>
 
         <!-- Indicadores de proa/popa -->
         <g id="p_proa" class="parte" data-parte="proa">
