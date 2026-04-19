@@ -150,6 +150,8 @@
     font-weight: 700;
     cursor: pointer;
     font-family: inherit;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(255,255,255,0.2);
   }
   nav.tabs button.active {
     background: var(--crema);
@@ -277,6 +279,8 @@
     border: none;
     width: 100%;
     text-align: left;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(255,255,255,0.2);
   }
   .emergencia-card.azul .emergencia-header {
     background: linear-gradient(135deg, #0a3d62 0%, #1f6fa8 100%);
@@ -1087,12 +1091,24 @@ function actualizarDesdeEvento(evt) {
   rumbo = ang;
   actualizar();
 }
+// Usamos Pointer Events (unifican ratón + táctil + stylus) y funcionan bien en iOS/Safari.
+barco.addEventListener('pointerdown', (e) => {
+  arrastrando = true;
+  try { barco.setPointerCapture(e.pointerId); } catch (_) {}
+  actualizarDesdeEvento(e);
+  e.preventDefault();
+});
+barco.addEventListener('pointermove', (e) => {
+  if (arrastrando) { actualizarDesdeEvento(e); e.preventDefault(); }
+});
+const soltar = () => { arrastrando = false; };
+barco.addEventListener('pointerup', soltar);
+barco.addEventListener('pointercancel', soltar);
+barco.addEventListener('pointerleave', soltar);
+// Fallback mouse por si algún navegador viejo no soporta pointer events
 barco.addEventListener('mousedown', (e) => { arrastrando = true; actualizarDesdeEvento(e); });
 window.addEventListener('mousemove', (e) => { if (arrastrando) actualizarDesdeEvento(e); });
-window.addEventListener('mouseup', () => { arrastrando = false; });
-barco.addEventListener('touchstart', (e) => { arrastrando = true; actualizarDesdeEvento(e); e.preventDefault(); }, {passive:false});
-window.addEventListener('touchmove', (e) => { if (arrastrando) { actualizarDesdeEvento(e); e.preventDefault(); } }, {passive:false});
-window.addEventListener('touchend', () => { arrastrando = false; });
+window.addEventListener('mouseup', soltar);
 
 actualizar();
 
@@ -1158,8 +1174,9 @@ function mostrarParte(key) {
 
 // Click/toque sobre las partes dibujadas y sobre las etiquetas con flechas
 partesSvg.querySelectorAll('.parte, .etiqueta').forEach(el => {
+  // Un único manejador para ratón y táctil
+  el.addEventListener('pointerup', () => mostrarParte(el.dataset.parte));
   el.addEventListener('click', () => mostrarParte(el.dataset.parte));
-  el.addEventListener('touchstart', (e) => { e.preventDefault(); mostrarParte(el.dataset.parte); }, {passive:false});
 });
 
 /* ============================================================
