@@ -203,7 +203,7 @@
 
       <!-- BARCO (grupo rotable). Por defecto apunta hacia arriba (proa al viento = rumbo 0°) -->
       <g id="barco" transform="rotate(90 300 300)">
-        <g transform="translate(300,300)">
+        <g transform="translate(300,300) scale(1.4)">
           <!-- Halo arrastrable (fácil de agarrar con el dedo) -->
           <circle r="105" fill="transparent"/>
           <!-- Casco -->
@@ -299,6 +299,13 @@ function pintarSectores() {
   html += dibujarSector(CX, CY, R, -ZONA_MUERTA, ZONA_MUERTA, '#c0392b', 0.32);
   // Zona navegable (el resto)
   html += dibujarSector(CX, CY, R, ZONA_MUERTA, 360 - ZONA_MUERTA, '#27ae60', 0.16);
+  // Líneas divisorias entre rumbos (ceñida / través / largo / empopada)
+  const divisorias = [45, 75, 115, 160, 200, 245, 285, 315];
+  divisorias.forEach(a => {
+    const p = puntoEnCirculo(CX, CY, R, a);
+    html += `<line x1="${CX}" y1="${CY}" x2="${p.x}" y2="${p.y}"
+              stroke="rgba(255,255,255,0.35)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  });
   sectoresG.innerHTML = html;
 }
 
@@ -306,13 +313,13 @@ function pintarEtiquetas() {
   // Las etiquetas indican el rumbo cuando la PROA apunta a ese sector.
   // 0° = arriba (proa al viento). Sentido horario.
   const rumbos = [
-    { ang: 45,  txt: 'CEÑIDA',    sub: 'viento por babor' },
-    { ang: 90,  txt: 'TRAVÉS',    sub: 'viento por babor' },
+    { ang: 60,  txt: 'CEÑIDA',    sub: 'viento por babor' },
+    { ang: 95,  txt: 'TRAVÉS',    sub: 'viento por babor' },
     { ang: 135, txt: 'LARGO',     sub: 'viento por babor' },
     { ang: 180, txt: 'EMPOPADA',  sub: 'viento de popa' },
     { ang: 225, txt: 'LARGO',     sub: 'viento por estribor' },
-    { ang: 270, txt: 'TRAVÉS',    sub: 'viento por estribor' },
-    { ang: 315, txt: 'CEÑIDA',    sub: 'viento por estribor' }
+    { ang: 265, txt: 'TRAVÉS',    sub: 'viento por estribor' },
+    { ang: 300, txt: 'CEÑIDA',    sub: 'viento por estribor' }
   ];
   let html = '';
   rumbos.forEach(r => {
@@ -347,7 +354,7 @@ function calcularRumbo(r) {
       magnitud: 0, flameando: true, lado
     };
   }
-  if (abs < 60) {
+  if (abs < 75) {
     return {
       nombre: 'Ceñida — ' + lado,
       desc: 'Rumbo más cerrado posible al viento (~45°). El barco escora y avanza poco a poco ganando barlovento.',
@@ -355,7 +362,7 @@ function calcularRumbo(r) {
       magnitud: 18, magFoque: 14, flameando: false, lado
     };
   }
-  if (abs < 110) {
+  if (abs < 115) {
     return {
       nombre: 'Través — ' + lado,
       desc: 'Viento perpendicular al barco (~90°). Es el rumbo más rápido y cómodo, ideal para aprender.',
