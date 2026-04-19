@@ -367,7 +367,7 @@
     </svg>
 
     <div class="leyenda">
-      <span><i style="background:#c0392b"></i> Zona muerta (no se puede navegar)</span>
+      <span><i style="background:#c0392b"></i> Aproado (no se puede navegar)</span>
       <span><i style="background:#27ae60"></i> Zona navegable</span>
       <span><i style="background:#ecf0f1"></i> Viento</span>
     </div>
@@ -694,7 +694,7 @@ function calcularRumbo(r) {
 
   if (abs < ZONA_MUERTA) {
     return {
-      nombre: '⚠ Zona muerta',
+      nombre: '⚠ Aproado',
       desc: 'El viento viene demasiado de proa. Las velas flamean (no cogen viento) y el barco se para. NO SE PUEDE NAVEGAR a menos de unos 45° del viento.',
       consejo: 'Gira el barco al menos 45° hacia un lado. Para ir contra el viento hay que zigzaguear: CEÑIDA por un bordo, VIRAR, y CEÑIDA por el otro.',
       magnitud: 0, flameando: true, lado
