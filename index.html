@@ -127,14 +127,134 @@
     margin-top: 8px;
     font-size: 12px;
   }
+  /* Tabs de navegación entre apartados */
+  nav.tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  nav.tabs button {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.25);
+    padding: 10px 18px;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  nav.tabs button.active {
+    background: var(--crema);
+    color: var(--azul-mar);
+    border-color: var(--crema);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  /* Sección de nudos */
+  .nudo-picker {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .nudo-picker button {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.25);
+    padding: 9px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .nudo-picker button.active {
+    background: var(--amarillo);
+    color: var(--gris);
+    border-color: var(--amarillo);
+  }
+  .nudo-container {
+    background: rgba(245, 243, 231, 0.97);
+    color: var(--gris);
+    border-radius: 16px;
+    padding: 18px;
+    max-width: 640px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .nudo-container h2 {
+    color: var(--azul-mar);
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .nudo-uso {
+    font-size: 14px;
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+  .nudo-uso strong { color: var(--azul-mar); }
+  .nudo-svg-box {
+    background: linear-gradient(180deg, #ecf0f1 0%, #d5dbdb 100%);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .nudo-svg-box svg { max-height: 280px; }
+  .nudo-paso-texto {
+    font-size: 15px;
+    line-height: 1.5;
+    background: var(--crema);
+    border-left: 4px solid var(--amarillo);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    min-height: 70px;
+  }
+  .nudo-paso-texto strong { color: var(--azul-mar); }
+  .nudo-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .nudo-nav button {
+    background: var(--azul-mar);
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    flex: 1;
+  }
+  .nudo-nav button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nudo-paso-contador {
+    font-weight: 700;
+    color: var(--azul-mar);
+    font-size: 14px;
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
 <header>
   <h1>⛵ Aprender a navegar en el Boricua</h1>
-  <p>El viento sopla siempre desde arriba. <b>Gira el barco</b> para cambiar de rumbo.</p>
+  <p id="subheader">El viento sopla siempre desde arriba. <b>Gira el barco</b> para cambiar de rumbo.</p>
 </header>
 
+<nav class="tabs">
+  <button data-tab="navegacion" class="active">⛵ Rumbos y velas</button>
+  <button data-tab="nudos">🪢 Nudos</button>
+</nav>
+
+<section id="tab-navegacion" class="tab-content active">
 <div class="layout">
   <div class="escena">
     <svg id="diagrama" viewBox="0 0 600 600">
@@ -259,6 +379,28 @@
     <p class="pista">Ángulo respecto al viento: <span id="angulo">90°</span></p>
   </div>
 </div>
+</section>
+
+<section id="tab-nudos" class="tab-content">
+  <div class="nudo-picker" id="nudoPicker">
+    <button data-nudo="guia" class="active">As de guía</button>
+    <button data-nudo="ballestrinque">Ballestrinque</button>
+    <button data-nudo="llano">Llano</button>
+  </div>
+  <div class="nudo-container">
+    <h2 id="nudoNombre">As de guía</h2>
+    <p class="nudo-uso" id="nudoUso"></p>
+    <div class="nudo-svg-box">
+      <svg id="nudoSvg" viewBox="0 0 400 260"></svg>
+    </div>
+    <div class="nudo-paso-texto" id="nudoPasoTexto"></div>
+    <div class="nudo-nav">
+      <button id="btnAnterior">◀ Anterior</button>
+      <span class="nudo-paso-contador" id="nudoContador">Paso 1 / 5</span>
+      <button id="btnSiguiente">Siguiente ▶</button>
+    </div>
+  </div>
+</section>
 
 <script>
 const svg = document.getElementById('diagrama');
@@ -467,6 +609,310 @@ window.addEventListener('touchmove', (e) => { if (arrastrando) { actualizarDesde
 window.addEventListener('touchend', () => { arrastrando = false; });
 
 actualizar();
+
+/* ============================================================
+   TABS — cambiar entre "Rumbos y velas" y "Nudos"
+   ============================================================ */
+const tabBtns = document.querySelectorAll('nav.tabs button');
+const tabContents = document.querySelectorAll('.tab-content');
+const subheader = document.getElementById('subheader');
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    tabBtns.forEach(b => b.classList.toggle('active', b === btn));
+    tabContents.forEach(c => c.classList.toggle('active', c.id === 'tab-' + target));
+    subheader.innerHTML = target === 'nudos'
+      ? 'Tres nudos esenciales para navegar. <b>Pulsa siguiente</b> para ver cada paso.'
+      : 'El viento sopla siempre desde arriba. <b>Gira el barco</b> para cambiar de rumbo.';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+/* ============================================================
+   NUDOS — diagramas SVG paso a paso
+   ============================================================ */
+const ROPE = '#a0522d';      // color de la cuerda
+const ROPE_DARK = '#6b3410'; // borde
+const ROPE2 = '#2980b9';     // segundo cabo (nudo llano)
+const ROPE2_DARK = '#1a5276';
+const POST = '#7f8c8d';      // palo/poste (ballestrinque)
+
+// Ayudante: dibuja un trozo de cuerda (stroke grueso + contorno)
+function rope(d, color, colorDark) {
+  color = color || ROPE;
+  colorDark = colorDark || ROPE_DARK;
+  return `<path d="${d}" stroke="${colorDark}" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <path d="${d}" stroke="${color}" stroke-width="14" stroke-linecap="round" fill="none"/>`;
+}
+// Marca el chicote (extremo de la cuerda)
+function chicote(x, y, color) {
+  color = color || '#c0392b';
+  return `<circle cx="${x}" cy="${y}" r="9" fill="${color}" stroke="#2c3e50" stroke-width="1.5"/>`;
+}
+
+/* ---------- AS DE GUÍA ---------- */
+const guiaPasos = [
+  {
+    texto: '<strong>1. Identifica las dos partes.</strong> El <b>FIRME</b> es la parte fija de la cuerda. El <b>CHICOTE</b> es el extremo con el que trabajarás.',
+    svg: `
+      ${rope('M 30 130 L 370 130')}
+      ${chicote(370, 130)}
+      <text x="30" y="90" font-size="15" font-weight="800" fill="#0a3d62">FIRME</text>
+      <text x="30" y="108" font-size="12" fill="#0a3d62">(parte fija)</text>
+      <text x="300" y="90" font-size="15" font-weight="800" fill="#c0392b">CHICOTE</text>
+      <text x="300" y="108" font-size="12" fill="#c0392b">(extremo)</text>
+      <path d="M 350 115 L 365 125" stroke="#c0392b" stroke-width="2" fill="none"/>
+    `
+  },
+  {
+    texto: '<strong>2. Haz un pequeño bucle</strong> en el firme. Ese bucle es "el agujero del conejo". El chicote debe pasar por <b>encima</b> del firme.',
+    svg: `
+      <!-- firme que entra por la izquierda -->
+      ${rope('M 30 175 L 180 175')}
+      <!-- sigue el firme hacia la derecha, PASA POR DEBAJO del cruce -->
+      ${rope('M 215 175 L 370 175')}
+      <!-- bucle: el chicote sube, da una vuelta y vuelve a cruzar por encima -->
+      ${rope('M 180 175 C 180 90, 290 90, 290 160 C 290 195, 230 195, 200 185')}
+      ${chicote(200, 185)}
+      <text x="240" y="50" font-size="14" font-weight="700" fill="#0a3d62">🕳️ el agujero</text>
+      <path d="M 238 55 Q 260 80 270 110" stroke="#0a3d62" stroke-width="1.5" fill="none" marker-end="url(#fA)"/>
+      <defs>
+        <marker id="fA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#0a3d62"/>
+        </marker>
+      </defs>
+    `
+  },
+  {
+    texto: '<strong>3. El conejo sale por el agujero.</strong> Pasa el chicote <b>por dentro del bucle</b>, de abajo hacia arriba.',
+    svg: `
+      ${rope('M 30 175 L 180 175')}
+      ${rope('M 215 175 L 370 175')}
+      ${rope('M 180 175 C 180 90, 290 90, 290 160 C 290 195, 240 195, 230 170 C 225 150, 240 130, 250 110 L 255 70')}
+      ${chicote(255, 70)}
+      <text x="270" y="55" font-size="16">🐰</text>
+      <text x="100" y="240" font-size="13" fill="#0a3d62" font-weight="700">El chicote sube por el bucle</text>
+    `
+  },
+  {
+    texto: '<strong>4. El conejo rodea el árbol.</strong> Lleva el chicote <b>por detrás del firme</b> (el árbol es la parte fija de la cuerda).',
+    svg: `
+      ${rope('M 30 175 L 180 175')}
+      ${rope('M 215 175 L 370 175')}
+      ${rope('M 180 175 C 180 90, 290 90, 290 160 C 290 195, 240 195, 230 170')}
+      <!-- chicote sube, rodea el firme por detrás (pasa por encima al cruzar por la izquierda) y vuelve -->
+      ${rope('M 230 170 C 225 140, 240 110, 200 70 C 150 40, 110 90, 160 110 L 210 115')}
+      ${chicote(210, 115)}
+      <text x="40" y="50" font-size="16">🐰</text>
+      <text x="60" y="48" font-size="13" fill="#0a3d62" font-weight="700">rodea el árbol 🌳</text>
+    `
+  },
+  {
+    texto: '<strong>5. El conejo vuelve al agujero.</strong> Mete el chicote <b>de vuelta por el bucle</b>, esta vez hacia abajo. Tira del firme y del chicote: listo, tienes un <b>bucle fijo que no se desliza</b>.',
+    svg: `
+      ${rope('M 30 175 L 155 175')}
+      ${rope('M 245 175 L 370 175')}
+      <!-- bucle cerrado con las dos pasadas del chicote -->
+      ${rope('M 155 175 C 140 130, 170 90, 220 100 C 260 110, 270 150, 250 170 C 235 185, 215 180, 200 170')}
+      ${rope('M 200 170 C 180 160, 185 140, 210 135 L 255 135')}
+      ${chicote(255, 135)}
+      <text x="140" y="240" font-size="13" fill="#0a3d62" font-weight="700">✅ Bucle fijo — no desliza y es fácil de deshacer</text>
+    `
+  }
+];
+
+/* ---------- BALLESTRINQUE ---------- */
+const ballesPasos = [
+  {
+    texto: '<strong>1. Elige el palo o barra</strong> al que quieres amarrar la cuerda (una cornamusa, un guardamancebo, un candelero…). Acerca el chicote al palo.',
+    svg: `
+      <!-- Palo vertical -->
+      <rect x="185" y="20" width="30" height="220" fill="${POST}" rx="4" stroke="#34495e" stroke-width="2"/>
+      <rect x="185" y="20" width="12" height="220" fill="rgba(255,255,255,0.15)"/>
+      ${rope('M 280 180 L 380 180')}
+      ${chicote(280, 180)}
+      <text x="295" y="160" font-size="13" font-weight="700" fill="#c0392b">CHICOTE</text>
+    `
+  },
+  {
+    texto: '<strong>2. Da una primera vuelta</strong> al palo: pasa el chicote por detrás y sácalo por el otro lado, formando una <b>X</b> al cruzarse por delante.',
+    svg: `
+      <rect x="185" y="20" width="30" height="220" fill="${POST}" rx="4" stroke="#34495e" stroke-width="2"/>
+      <rect x="185" y="20" width="12" height="220" fill="rgba(255,255,255,0.15)"/>
+      <!-- cuerda entra por detrás del palo -->
+      ${rope('M 380 180 L 215 180')}
+      <!-- cuerda asoma por el otro lado y cruza por delante hacia arriba -->
+      ${rope('M 185 180 L 130 180 C 100 180, 100 140, 130 140 L 215 140')}
+      <!-- el chicote sale por detrás arriba (no se ve, indicado) -->
+      ${rope('M 215 140 L 270 120')}
+      ${chicote(270, 120)}
+      <text x="60" y="220" font-size="13" font-weight="700" fill="#0a3d62">Primera vuelta completa</text>
+    `
+  },
+  {
+    texto: '<strong>3. Da una segunda vuelta</strong> al palo, <b>en el mismo sentido</b>, pero esta vez no cruces por delante: deja un hueco por donde meter el chicote después.',
+    svg: `
+      <rect x="185" y="20" width="30" height="220" fill="${POST}" rx="4" stroke="#34495e" stroke-width="2"/>
+      <rect x="185" y="20" width="12" height="220" fill="rgba(255,255,255,0.15)"/>
+      <!-- primera vuelta (con la X) - partes visibles -->
+      ${rope('M 380 200 L 215 200')}
+      ${rope('M 185 200 L 130 200 C 100 200, 100 160, 130 160 L 215 160')}
+      <!-- segunda vuelta empieza: sale por detrás arriba y baja por delante -->
+      ${rope('M 215 160 C 250 140, 250 90, 215 90')}
+      ${rope('M 185 90 L 130 90 C 110 90, 110 120, 130 120 L 215 120')}
+      ${chicote(215, 120)}
+      <text x="220" y="70" font-size="14" font-weight="700" fill="#0a3d62">2ª vuelta →</text>
+    `
+  },
+  {
+    texto: '<strong>4. Mete el chicote por debajo de la segunda vuelta.</strong> El extremo queda <b>atrapado</b> bajo el cruce diagonal que acabas de hacer.',
+    svg: `
+      <rect x="185" y="20" width="30" height="220" fill="${POST}" rx="4" stroke="#34495e" stroke-width="2"/>
+      <rect x="185" y="20" width="12" height="220" fill="rgba(255,255,255,0.15)"/>
+      ${rope('M 380 210 L 215 210')}
+      ${rope('M 185 210 L 130 210 C 100 210, 100 170, 130 170 L 215 170')}
+      ${rope('M 215 170 C 250 150, 250 100, 215 100')}
+      <!-- segunda vuelta cruzando por encima; chicote metido bajo ella -->
+      ${rope('M 185 100 L 150 100 C 130 100, 125 135, 150 140')}
+      <!-- chicote que asoma por el otro lado, bajo la vuelta -->
+      ${rope('M 150 140 L 190 145 L 245 130')}
+      ${chicote(245, 130)}
+      <text x="255" y="115" font-size="13" font-weight="700" fill="#0a3d62">chicote bajo la vuelta</text>
+    `
+  },
+  {
+    texto: '<strong>5. Aprieta</strong> tirando del firme y del chicote a la vez. Listo: el ballestrinque sujeta bien con tensión, y se suelta fácil al aflojar. ⚠️ <b>Si la cuerda deja de tener tensión, el ballestrinque se afloja</b> — no lo uses para amarrar el barco sin vigilarlo.',
+    svg: `
+      <rect x="185" y="20" width="30" height="220" fill="${POST}" rx="4" stroke="#34495e" stroke-width="2"/>
+      <rect x="185" y="20" width="12" height="220" fill="rgba(255,255,255,0.15)"/>
+      <!-- Dos vueltas apretadas y simétricas con la diagonal característica -->
+      ${rope('M 380 180 L 215 180')}
+      ${rope('M 185 180 L 155 180')}
+      <!-- diagonal por delante del palo cruzando la X -->
+      ${rope('M 155 180 L 245 120')}
+      ${rope('M 215 120 L 185 120')}
+      ${rope('M 155 120 L 245 180')}
+      ${chicote(155, 120)}
+      <text x="60" y="240" font-size="13" font-weight="700" fill="#0a3d62">✅ Nudo terminado — fíjate en la X de la parte delantera</text>
+    `
+  }
+];
+
+/* ---------- LLANO (rizo) ---------- */
+const llanoPasos = [
+  {
+    texto: '<strong>1. Junta los dos cabos.</strong> Sirve para unir dos cuerdas <b>del mismo grosor</b> (por ejemplo, al tomar rizos en la vela). No vale para cargas grandes ni para cuerdas de distinto grosor.',
+    svg: `
+      ${rope('M 30 130 L 200 130', ROPE, ROPE_DARK)}
+      ${rope('M 200 130 L 370 130', ROPE2, ROPE2_DARK)}
+      ${chicote(370, 130, '#2980b9')}
+      ${chicote(30, 130, '#c0392b')}
+      <text x="50" y="95" font-size="14" font-weight="700" fill="${ROPE_DARK}">Cabo A</text>
+      <text x="300" y="95" font-size="14" font-weight="700" fill="${ROPE2_DARK}">Cabo B</text>
+    `
+  },
+  {
+    texto: '<strong>2. Cruza DERECHA sobre IZQUIERDA.</strong> El chicote del cabo B (azul) pasa por encima del cabo A (marrón) y sale por debajo.',
+    svg: `
+      <!-- cabo A va desde la izquierda y sube por la derecha -->
+      ${rope('M 30 160 C 100 160, 150 160, 200 140 C 240 125, 260 135, 230 155', ROPE, ROPE_DARK)}
+      ${rope('M 230 155 L 260 180', ROPE, ROPE_DARK)}
+      <!-- cabo B llega por la derecha, cruza por encima del A y sale por abajo -->
+      ${rope('M 370 160 C 310 160, 280 160, 240 140', ROPE2, ROPE2_DARK)}
+      ${rope('M 240 140 L 190 180', ROPE2, ROPE2_DARK)}
+      ${chicote(260, 180, '#c0392b')}
+      ${chicote(190, 180, '#2980b9')}
+      <text x="80" y="220" font-size="13" font-weight="700" fill="#0a3d62">Primera lazada ✓</text>
+    `
+  },
+  {
+    texto: '<strong>3. Ahora cruza IZQUIERDA sobre DERECHA.</strong> Haz la segunda lazada <b>al revés</b> que la primera. Si la haces en el mismo sentido, te sale un "nudo de vaca" (se afloja solo).',
+    svg: `
+      <!-- Primera lazada simétrica (abajo) -->
+      ${rope('M 40 200 C 80 200, 120 200, 170 180', ROPE, ROPE_DARK)}
+      ${rope('M 360 200 C 320 200, 280 200, 230 180', ROPE2, ROPE2_DARK)}
+      <!-- Segunda lazada: marrón sube a la izquierda, cruza sobre azul por arriba -->
+      ${rope('M 170 180 C 165 140, 220 120, 250 110', ROPE, ROPE_DARK)}
+      ${rope('M 250 110 L 310 100', ROPE, ROPE_DARK)}
+      ${chicote(310, 100, '#c0392b')}
+      ${rope('M 230 180 C 235 150, 200 130, 170 115', ROPE2, ROPE2_DARK)}
+      ${rope('M 170 115 L 110 110', ROPE2, ROPE2_DARK)}
+      ${chicote(110, 110, '#2980b9')}
+      <text x="110" y="240" font-size="12" font-weight="700" fill="#0a3d62">derecha sobre izquierda → izquierda sobre derecha</text>
+    `
+  },
+  {
+    texto: '<strong>4. Aprieta</strong> tirando a la vez de los dos firmes y los dos chicotes. El nudo queda <b>plano y simétrico</b> — si queda torcido, es un nudo de vaca: deshaz y vuelve a hacerlo.',
+    svg: `
+      <!-- Nudo llano final: dos lazadas entrelazadas simétricas -->
+      ${rope('M 30 150 C 90 150, 130 150, 170 160', ROPE, ROPE_DARK)}
+      ${rope('M 370 150 C 310 150, 270 150, 230 160', ROPE2, ROPE2_DARK)}
+      <!-- Loops entrelazados -->
+      ${rope('M 170 160 C 150 180, 180 210, 220 200', ROPE, ROPE_DARK)}
+      ${rope('M 220 200 L 260 170', ROPE, ROPE_DARK)}
+      ${chicote(260, 170, '#c0392b')}
+      ${rope('M 230 160 C 250 140, 220 110, 180 120', ROPE2, ROPE2_DARK)}
+      ${rope('M 180 120 L 140 150', ROPE2, ROPE2_DARK)}
+      ${chicote(140, 150, '#2980b9')}
+      <text x="80" y="245" font-size="13" font-weight="700" fill="#0a3d62">✅ Plano y simétrico = nudo llano bien hecho</text>
+    `
+  }
+];
+
+const nudos = {
+  guia: {
+    nombre: 'As de guía',
+    uso: 'El "rey de los nudos". Hace un <strong>bucle fijo que no se desliza</strong> y es fácil de deshacer aunque haya soportado carga. Úsalo para amarrar un cabo a una argolla, pasar por un noray o asegurar a una persona. 🐰 Mnemónico: <em>el conejo sale del agujero, da la vuelta al árbol y vuelve al agujero.</em>',
+    pasos: guiaPasos
+  },
+  ballestrinque: {
+    nombre: 'Ballestrinque',
+    uso: 'El nudo <strong>más rápido para amarrar a un palo, candelero o cornamusa</strong>. Aguanta bien mientras haya tensión constante. Se hace y se deshace en un segundo.',
+    pasos: ballesPasos
+  },
+  llano: {
+    nombre: 'Nudo llano (o de rizo)',
+    uso: 'Sirve para <strong>unir dos cuerdas del mismo grosor</strong>, típicamente al tomar rizos en la vela mayor. ⚠️ No sirve para cargas grandes ni para cabos mojados/resbaladizos — en esos casos usa otro nudo.',
+    pasos: llanoPasos
+  }
+};
+
+let nudoActual = 'guia';
+let pasoActual = 0;
+
+const nudoSvg = document.getElementById('nudoSvg');
+const nudoNombre = document.getElementById('nudoNombre');
+const nudoUso = document.getElementById('nudoUso');
+const nudoPasoTexto = document.getElementById('nudoPasoTexto');
+const nudoContador = document.getElementById('nudoContador');
+const btnAnterior = document.getElementById('btnAnterior');
+const btnSiguiente = document.getElementById('btnSiguiente');
+
+function renderNudo() {
+  const n = nudos[nudoActual];
+  nudoNombre.textContent = n.nombre;
+  nudoUso.innerHTML = n.uso;
+  const paso = n.pasos[pasoActual];
+  nudoSvg.innerHTML = paso.svg;
+  nudoPasoTexto.innerHTML = paso.texto;
+  nudoContador.textContent = `Paso ${pasoActual + 1} / ${n.pasos.length}`;
+  btnAnterior.disabled = pasoActual === 0;
+  btnSiguiente.disabled = pasoActual === n.pasos.length - 1;
+}
+btnAnterior.addEventListener('click', () => { if (pasoActual > 0) { pasoActual--; renderNudo(); } });
+btnSiguiente.addEventListener('click', () => {
+  const n = nudos[nudoActual];
+  if (pasoActual < n.pasos.length - 1) { pasoActual++; renderNudo(); }
+});
+document.querySelectorAll('#nudoPicker button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#nudoPicker button').forEach(b => b.classList.toggle('active', b === btn));
+    nudoActual = btn.dataset.nudo;
+    pasoActual = 0;
+    renderNudo();
+  });
+});
+renderNudo();
 </script>
 </body>
 </html>
