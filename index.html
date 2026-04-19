@@ -249,6 +249,111 @@
     background: var(--azul-mar);
     color: white;
   }
+  /* ======= Sección de emergencias ======= */
+  .emergencias {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .emergencia-card {
+    background: var(--crema);
+    color: var(--gris);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  }
+  .emergencia-header {
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #c0392b 0%, #e67e22 100%);
+    color: white;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+    font-family: inherit;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+  .emergencia-card.azul .emergencia-header {
+    background: linear-gradient(135deg, #0a3d62 0%, #1f6fa8 100%);
+  }
+  .emergencia-header .icono { font-size: 22px; }
+  .emergencia-header .chevron {
+    margin-left: auto;
+    transition: transform 0.2s;
+    font-size: 14px;
+  }
+  .emergencia-card.open .emergencia-header .chevron {
+    transform: rotate(180deg);
+  }
+  .emergencia-body {
+    display: none;
+    padding: 12px 14px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .emergencia-card.open .emergencia-body { display: block; }
+  .emergencia-body p { margin-bottom: 8px; }
+  .emergencia-body ol {
+    padding-left: 22px;
+    margin: 6px 0 10px;
+  }
+  .emergencia-body ol li { margin-bottom: 6px; }
+  .emergencia-body strong { color: #c0392b; }
+  .emergencia-body h4 {
+    color: var(--azul-mar);
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .alerta {
+    background: #ffe8e5;
+    border-left: 4px solid var(--rojo);
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .vhf-box {
+    background: #12161c;
+    color: #2ecc71;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    line-height: 1.65;
+    white-space: pre-line;
+    box-shadow: inset 0 0 0 2px #2ecc71;
+  }
+  .vhf-box .placeholder {
+    color: #f1c40f;
+    font-weight: 700;
+  }
+  .equipo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px dashed #d5cfb5;
+    font-size: 14px;
+  }
+  .equipo-item:last-child { border: none; }
+  .equipo-item .emoji { font-size: 22px; line-height: 1; width: 28px; flex-shrink: 0; }
+  .equipo-item strong { color: var(--azul-mar); display: block; margin-bottom: 2px; }
+  .equipo-item .ubic {
+    color: var(--gris);
+    font-size: 13px;
+    opacity: 0.8;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -258,8 +363,9 @@
 </header>
 
 <nav class="tabs">
-  <button data-tab="navegacion" class="active">⛵ Rumbos y velas</button>
-  <button data-tab="partes">🔧 Partes del barco</button>
+  <button data-tab="navegacion" class="active">⛵ Rumbos</button>
+  <button data-tab="partes">🔧 Partes</button>
+  <button data-tab="emergencias">🚨 Emergencias</button>
 </nav>
 
 <section id="tab-navegacion" class="tab-content active">
@@ -606,6 +712,182 @@
   </div>
 </section>
 
+<section id="tab-emergencias" class="tab-content">
+  <div class="emergencias">
+
+    <!-- HOMBRE AL AGUA -->
+    <div class="emergencia-card open" data-card>
+      <button class="emergencia-header" data-toggle>
+        <span class="icono">🆘</span>
+        <span>Hombre al agua (MOB)</span>
+        <span class="chevron">▾</span>
+      </button>
+      <div class="emergencia-body">
+        <div class="alerta">⚠️ Los primeros 10 segundos son los más importantes. Actúa en este orden sin pensar.</div>
+        <ol>
+          <li><strong>GRITA</strong> "¡HOMBRE AL AGUA!" para que toda la tripulación se entere.</li>
+          <li><strong>LANZA</strong> el aro salvavidas, cojines de bañera, defensas — cualquier cosa que flote y marque el punto.</li>
+          <li><strong>SEÑALA</strong> sin parar al náufrago. Un tripulante hace SOLO esto: <b>no lo pierdas de vista</b>.</li>
+          <li>Pulsa el botón <strong>MOB</strong> del GPS/plotter (marca la posición).</li>
+          <li>Cuenta a los demás. ¿Falta alguien más?</li>
+          <li>Maniobra de vuelta: <b>afloja escotas</b>, pon motor si hay, y da la vuelta (maniobra en "8" o de Boutakoff).</li>
+          <li>Aproxímate con el viento desde el náufrago hacia el barco (<b>él a barlovento, tú a sotavento</b>), a velocidad mínima.</li>
+          <li>Embárcalo por el costado o la popa con la escalerilla. Si está inconsciente: arnés y polipasto del amante de la botavara.</li>
+        </ol>
+        <h4>Si no lo recuperas en 2-3 min</h4>
+        <p>Llama <strong>MAYDAY</strong> por VHF (canal 16) mientras sigues maniobrando.</p>
+      </div>
+    </div>
+
+    <!-- MAYDAY -->
+    <div class="emergencia-card" data-card>
+      <button class="emergencia-header" data-toggle>
+        <span class="icono">📻</span>
+        <span>Llamada MAYDAY por VHF</span>
+        <span class="chevron">▾</span>
+      </button>
+      <div class="emergencia-body">
+        <p>Sólo se usa cuando hay <strong>riesgo grave e inminente para la vida</strong> o el barco. Canal <b>16</b> (emergencia internacional).</p>
+        <h4>Qué decir (lee este guion)</h4>
+<div class="vhf-box">MAYDAY, MAYDAY, MAYDAY
+
+Aquí velero BORICUA,
+     BORICUA, BORICUA
+
+Indicativo: <span class="placeholder">[indicativo]</span>
+
+Posición: <span class="placeholder">[lat / long o referencia]</span>
+
+Naturaleza: <span class="placeholder">[hombre al agua /
+  incendio / vía de agua / …]</span>
+
+Personas a bordo: <span class="placeholder">[n.º]</span>
+
+Necesito: <span class="placeholder">[asistencia médica /
+  remolque / helicóptero]</span>
+
+Cambio.</div>
+        <ol>
+          <li>Si nadie contesta en 1 min → <b>repite la llamada entera</b>.</li>
+          <li>Si el VHF tiene <b>DSC</b> (tapa roja con "Distress"): mantén pulsado 5 s — manda alerta automática con posición.</li>
+          <li>Cuando Salvamento responda, <b>habla despacio y claro</b>. Ellos dirigen la conversación.</li>
+        </ol>
+        <div class="alerta">🇪🇸 En España el Centro Coordinador es <b>Salvamento Marítimo</b>. También puedes llamar al <b>112</b> por móvil.</div>
+      </div>
+    </div>
+
+    <!-- INCENDIO / VÍA DE AGUA -->
+    <div class="emergencia-card" data-card>
+      <button class="emergencia-header" data-toggle>
+        <span class="icono">🔥💧</span>
+        <span>Incendio o vía de agua</span>
+        <span class="chevron">▾</span>
+      </button>
+      <div class="emergencia-body">
+        <h4>🔥 Incendio</h4>
+        <ol>
+          <li><strong>Cierra el gas</strong> (válvula de la bombona, normalmente en un cofre de cubierta).</li>
+          <li>Si es por el motor: <strong>corta el combustible</strong> (grifo de gasoil) y apaga el motor.</li>
+          <li>Coge el <strong>extintor</strong> más cercano. Apunta a la base de las llamas, no a la llama.</li>
+          <li>Si no lo controlas en 30 s: chalecos puestos, preparar la balsa, MAYDAY.</li>
+        </ol>
+        <h4>💧 Vía de agua</h4>
+        <ol>
+          <li><strong>Cierra todos los grifos de fondo</strong> (WC, fregadero, motor). Son la entrada más común.</li>
+          <li>Localiza la fuga: mira en sala de máquinas, bajo el fregadero, lavabo, bocina del eje del timón, pasacascos.</li>
+          <li>Achica: <b>bomba eléctrica + bomba manual + cubos</b> todo a la vez.</li>
+          <li>Tapa la fuga con lo que haya: taco de madera, trapos, cojín.</li>
+          <li>Si el agua sigue subiendo: MAYDAY, chalecos, preparar balsa.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- MAL TIEMPO -->
+    <div class="emergencia-card" data-card>
+      <button class="emergencia-header" data-toggle>
+        <span class="icono">🌊</span>
+        <span>Mal tiempo</span>
+        <span class="chevron">▾</span>
+      </button>
+      <div class="emergencia-body">
+        <h4>Antes de que apriete</h4>
+        <ol>
+          <li><b>Chalecos puestos</b> todos. En cubierta, además, <b>arnés enganchado a la línea de vida</b>.</li>
+          <li>Cierra <b>escotillas, portillos y tambucho</b>.</li>
+          <li>Guarda todo lo que esté suelto (si no lo amarras, vuela o rompe algo).</li>
+          <li>Reduce vela <b>antes</b> de necesitarlo: toma un rizo en la mayor, cambia al foque pequeño.</li>
+        </ol>
+        <h4>Durante</h4>
+        <ol>
+          <li>Ponte <b>a favor</b> de las olas más grandes (no de través — te tumba).</li>
+          <li>Si hay tierra cerca a sotavento, <b>aléjate de la costa</b>.</li>
+          <li>Evita ir abajo si estás mareado — al aire libre, mirando al horizonte, se marea menos.</li>
+          <li>Si se complica: <b>capear</b> (pairo con foque pequeño y mayor muy rizada) o <b>correr</b> empopada con muy poca vela.</li>
+        </ol>
+        <div class="alerta">🤢 Mareo: al primer síntoma, pastilla/pulsera, bebe agua y mira al horizonte. Nunca leas ni mires al móvil.</div>
+      </div>
+    </div>
+
+    <!-- DÓNDE ESTÁ EL MATERIAL -->
+    <div class="emergencia-card azul" data-card>
+      <button class="emergencia-header" data-toggle>
+        <span class="icono">📍</span>
+        <span>¿Dónde está todo en el Boricua?</span>
+        <span class="chevron">▾</span>
+      </button>
+      <div class="emergencia-body">
+        <p>Antes de zarpar, el patrón te enseñará dónde está cada cosa. Repásalo mentalmente cada vez que subas:</p>
+        <div class="equipo-item">
+          <span class="emoji">🦺</span>
+          <div><strong>Chalecos salvavidas</strong><span class="ubic">Cofres de bancadas de la bañera / armario de la entrada</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">🎗️</span>
+          <div><strong>Arneses y líneas de vida</strong><span class="ubic">Junto a los chalecos. Engancha SIEMPRE antes de salir a cubierta con mal tiempo o de noche</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">⭕</span>
+          <div><strong>Aro salvavidas</strong><span class="ubic">Popa, sujeto al balcón / guardamancebos</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">🎆</span>
+          <div><strong>Bengalas / señales</strong><span class="ubic">Contenedor estanco en la mesa de cartas o bancada</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">🧯</span>
+          <div><strong>Extintores</strong><span class="ubic">Uno junto a la cocina, otro en la entrada, otro junto al motor</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">📯</span>
+          <div><strong>Bocina de niebla</strong><span class="ubic">Mesa de cartas</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">🏥</span>
+          <div><strong>Botiquín</strong><span class="ubic">Armario del baño o junto a la mesa de cartas</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">📻</span>
+          <div><strong>VHF</strong><span class="ubic">Mesa de cartas. Canal <b>16</b> de emergencia</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">⛽</span>
+          <div><strong>Grifos de fondo</strong><span class="ubic">Bajo fregadero, WC y motor. Saber abrirlos y cerrarlos a ciegas</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">🔥</span>
+          <div><strong>Bombona de gas</strong><span class="ubic">Cofre estanco en cubierta. Cierra la válvula después de cada uso</span></div>
+        </div>
+        <div class="equipo-item">
+          <span class="emoji">🛟</span>
+          <div><strong>Balsa salvavidas</strong><span class="ubic">En cubierta o bajo la bancada de popa. Tira del cabo para inflarla</span></div>
+        </div>
+        <div class="alerta">💡 Si algo de esta lista no sabes dónde está en <b>el Boricua</b>, pregúntale al patrón <b>antes</b> de soltar amarras.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <script>
 const svg = document.getElementById('diagrama');
 const barco = document.getElementById('barco');
@@ -822,7 +1104,8 @@ const tabContents = document.querySelectorAll('.tab-content');
 const subheader = document.getElementById('subheader');
 const subtitulos = {
   navegacion: 'El viento sopla siempre desde arriba. <b>Gira el barco</b> para cambiar de rumbo.',
-  partes: 'Conoce el Boricua: <b>pulsa cualquier parte</b> para saber cómo se llama.'
+  partes: 'Conoce el Boricua: <b>pulsa cualquier parte</b> para saber cómo se llama.',
+  emergencias: 'Qué hacer si algo va mal. <b>Lee esto antes de zarpar.</b>'
 };
 tabBtns.forEach(btn => {
   btn.addEventListener('click', () => {
@@ -877,6 +1160,18 @@ function mostrarParte(key) {
 partesSvg.querySelectorAll('.parte, .etiqueta').forEach(el => {
   el.addEventListener('click', () => mostrarParte(el.dataset.parte));
   el.addEventListener('touchstart', (e) => { e.preventDefault(); mostrarParte(el.dataset.parte); }, {passive:false});
+});
+
+/* ============================================================
+   EMERGENCIAS — tarjetas plegables (acordeón: una abierta a la vez)
+   ============================================================ */
+document.querySelectorAll('[data-toggle]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('[data-card]');
+    const yaAbierta = card.classList.contains('open');
+    document.querySelectorAll('[data-card]').forEach(c => c.classList.remove('open'));
+    if (!yaAbierta) card.classList.add('open');
+  });
 });
 </script>
 </body>
