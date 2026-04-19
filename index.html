@@ -394,7 +394,10 @@ function aplicarVelas(cfg) {
     document.getElementById('velaFoque').setAttribute('transform', 'rotate(0)');
     return;
   }
-  const signo = cfg.lado === 'babor' ? +1 : -1;
+  // Las velas van a sotavento (lado opuesto al viento):
+  // - viento por babor  => velas a estribor (positivo X local) => rotación NEGATIVA
+  // - viento por estribor => velas a babor (negativo X local) => rotación POSITIVA
+  const signo = cfg.lado === 'babor' ? -1 : +1;
   const aMayor = signo * cfg.magnitud;
   const aFoque = cfg.empopada ? -signo * cfg.magFoque : signo * cfg.magFoque; // orejas de burro en popa
 
