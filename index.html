@@ -20,24 +20,24 @@
     background: linear-gradient(180deg, #74b9ff 0%, #0a3d62 100%);
     min-height: 100vh;
     color: var(--crema);
-    padding: 16px;
+    padding: 12px;
   }
   header {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   header h1 {
-    font-size: clamp(20px, 4vw, 32px);
+    font-size: clamp(20px, 5vw, 32px);
     margin-bottom: 4px;
   }
   header p {
-    font-size: clamp(13px, 2vw, 16px);
+    font-size: clamp(12px, 3vw, 16px);
     opacity: 0.9;
   }
   .layout {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 12px;
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -47,7 +47,7 @@
   .escena {
     background: rgba(10, 61, 98, 0.4);
     border-radius: 16px;
-    padding: 16px;
+    padding: 12px;
     backdrop-filter: blur(6px);
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   }
@@ -55,7 +55,7 @@
     background: rgba(245, 243, 231, 0.97);
     color: var(--gris);
     border-radius: 16px;
-    padding: 20px;
+    padding: 16px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   }
   svg {
@@ -63,21 +63,21 @@
     height: auto;
     display: block;
     touch-action: none;
-    cursor: grab;
   }
-  svg:active { cursor: grabbing; }
+  #barco { cursor: grab; }
+  #barco:active { cursor: grabbing; }
   .leyenda {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     justify-content: center;
-    margin-top: 12px;
-    font-size: 13px;
+    margin-top: 10px;
+    font-size: 12px;
   }
   .leyenda span {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
   }
   .leyenda i {
     display: inline-block;
@@ -87,24 +87,25 @@
   }
   .panel h2 {
     color: var(--azul-mar);
-    font-size: 22px;
-    margin-bottom: 8px;
+    font-size: 20px;
+    margin-bottom: 6px;
   }
   .rumbo-actual {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--rojo);
     margin-bottom: 8px;
+    line-height: 1.1;
   }
   .panel .descripcion {
-    line-height: 1.5;
-    margin-bottom: 16px;
-    font-size: 15px;
+    line-height: 1.45;
+    margin-bottom: 14px;
+    font-size: 14px;
   }
   .consejo {
     background: var(--crema);
     border-left: 4px solid var(--azul-mar);
-    padding: 12px;
+    padding: 10px;
     border-radius: 6px;
     font-size: 14px;
     line-height: 1.4;
@@ -112,32 +113,31 @@
   .consejo strong { color: var(--azul-mar); }
   .ayuda {
     text-align: center;
-    margin-top: 12px;
+    margin-top: 10px;
     font-size: 13px;
-    opacity: 0.8;
+    opacity: 0.85;
   }
   .pista {
     background: var(--amarillo);
     color: var(--gris);
-    padding: 6px 12px;
+    padding: 5px 11px;
     border-radius: 20px;
     display: inline-block;
     font-weight: 600;
     margin-top: 8px;
-    font-size: 13px;
+    font-size: 12px;
   }
 </style>
 </head>
 <body>
 <header>
   <h1>⛵ Aprende a navegar</h1>
-  <p>Arrastra el sol amarillo para mover el viento y mira cómo se colocan las velas</p>
+  <p>El viento sopla siempre desde arriba. <b>Gira el barco</b> para cambiar de rumbo.</p>
 </header>
 
 <div class="layout">
   <div class="escena">
     <svg id="diagrama" viewBox="0 0 600 600">
-      <!-- Mar de fondo -->
       <defs>
         <radialGradient id="mar" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stop-color="#3c6382"/>
@@ -146,70 +146,104 @@
         <pattern id="olas" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
           <path d="M 0 10 Q 10 5 20 10 T 40 10" stroke="rgba(255,255,255,0.08)" fill="none" stroke-width="1"/>
         </pattern>
+        <!-- Flecha de viento (para las rayas animadas) -->
+        <marker id="puntaViento" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#ecf0f1"/>
+        </marker>
       </defs>
+
       <circle cx="300" cy="300" r="290" fill="url(#mar)"/>
       <circle cx="300" cy="300" r="290" fill="url(#olas)"/>
 
-      <!-- Sectores de rumbos (zonas coloreadas) -->
+      <!-- Sectores fijos (la zona muerta SIEMPRE está arriba, donde sopla el viento) -->
       <g id="sectores"></g>
 
       <!-- Círculo de referencia -->
-      <circle cx="300" cy="300" r="220" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1" stroke-dasharray="4 4"/>
+      <circle cx="300" cy="300" r="230" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1" stroke-dasharray="4 4"/>
 
       <!-- Etiquetas de rumbos -->
-      <g id="etiquetas" font-family="sans-serif" font-size="14" fill="white" text-anchor="middle" font-weight="600"></g>
+      <g id="etiquetas" font-family="sans-serif" font-size="13" fill="white" text-anchor="middle" font-weight="700"></g>
 
-      <!-- Flechas de viento de fondo -->
-      <g id="flechasViento" opacity="0.5"></g>
-
-      <!-- Barco (rotará según el rumbo elegido — fijo apuntando al norte de la imagen) -->
-      <g id="barco" transform="translate(300,300)">
-        <!-- Casco -->
-        <path d="M 0 -90 Q 28 -40 28 40 Q 28 75 0 90 Q -28 75 -28 40 Q -28 -40 0 -90 Z"
-              fill="#f5f3e7" stroke="#2c3e50" stroke-width="2.5"/>
-        <!-- Cubierta -->
-        <path d="M 0 -75 Q 20 -35 20 35 Q 20 65 0 78 Q -20 65 -20 35 Q -20 -35 0 -75 Z"
-              fill="#d4a574" stroke="#8b6914" stroke-width="1"/>
-        <!-- Mástil (punto central) -->
-        <circle cx="0" cy="-15" r="4" fill="#2c3e50"/>
-        <!-- Botavara y vela mayor -->
-        <g id="velaMayor">
-          <line x1="0" y1="-15" x2="0" y2="55" stroke="#2c3e50" stroke-width="2"/>
-          <path id="lonaMayor" d="M 0 -15 Q 8 20 0 55 Z"
-                fill="rgba(255,255,255,0.92)" stroke="#2c3e50" stroke-width="1.5"/>
-        </g>
-        <!-- Foque (vela de proa) -->
-        <g id="velaFoque">
-          <path id="lonaFoque" d="M 0 -75 Q 6 -50 0 -25 Z"
-                fill="rgba(255,255,255,0.85)" stroke="#2c3e50" stroke-width="1.2"/>
-        </g>
-      </g>
-
-      <!-- Indicador de viento (sol arrastrable) -->
-      <g id="indicadorViento" style="cursor: grab;">
-        <!-- Línea desde el centro -->
-        <line id="lineaViento" x1="300" y1="300" x2="300" y2="80"
-              stroke="#f1c40f" stroke-width="3" stroke-dasharray="8 4"/>
-        <!-- Flechas del viento soplando hacia el barco -->
-        <g id="flechaViento" transform="translate(300,80)">
-          <circle r="28" fill="#f1c40f" stroke="#e67e22" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="28">☀</text>
-          <text y="50" text-anchor="middle" font-size="11" fill="white" font-weight="700">VIENTO</text>
+      <!-- VIENTO: rayas animadas bajando desde arriba -->
+      <g id="viento">
+        <!-- Banner superior -->
+        <rect x="180" y="8" width="240" height="34" rx="17" fill="rgba(255,255,255,0.92)"/>
+        <text x="300" y="30" text-anchor="middle" font-size="16" font-weight="800" fill="#0a3d62">
+          💨  EL VIENTO SOPLA DESDE AQUÍ
+        </text>
+        <!-- Rayas de viento animadas -->
+        <g id="rayasViento" stroke="#ecf0f1" stroke-width="3" stroke-linecap="round" fill="none">
+          <line x1="120" y1="55" x2="120" y2="95" marker-end="url(#puntaViento)">
+            <animate attributeName="y1" values="55;110;55" dur="2.2s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="95;150;95" dur="2.2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.2s" repeatCount="indefinite"/>
+          </line>
+          <line x1="200" y1="55" x2="200" y2="95" marker-end="url(#puntaViento)">
+            <animate attributeName="y1" values="55;110;55" dur="2.4s" begin="0.3s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="95;150;95" dur="2.4s" begin="0.3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.4s" begin="0.3s" repeatCount="indefinite"/>
+          </line>
+          <line x1="300" y1="55" x2="300" y2="95" marker-end="url(#puntaViento)">
+            <animate attributeName="y1" values="55;110;55" dur="2.0s" begin="0.6s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="95;150;95" dur="2.0s" begin="0.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.0s" begin="0.6s" repeatCount="indefinite"/>
+          </line>
+          <line x1="400" y1="55" x2="400" y2="95" marker-end="url(#puntaViento)">
+            <animate attributeName="y1" values="55;110;55" dur="2.3s" begin="0.9s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="95;150;95" dur="2.3s" begin="0.9s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.3s" begin="0.9s" repeatCount="indefinite"/>
+          </line>
+          <line x1="480" y1="55" x2="480" y2="95" marker-end="url(#puntaViento)">
+            <animate attributeName="y1" values="55;110;55" dur="2.1s" begin="0.15s" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="95;150;95" dur="2.1s" begin="0.15s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0;1;0" dur="2.1s" begin="0.15s" repeatCount="indefinite"/>
+          </line>
         </g>
       </g>
 
-      <!-- Eje del barco (referencia) -->
-      <g id="ejeBarco">
-        <line x1="300" y1="200" x2="300" y2="400" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <!-- BARCO (grupo rotable). Por defecto apunta hacia arriba (proa al viento = rumbo 0°) -->
+      <g id="barco" transform="rotate(90 300 300)">
+        <g transform="translate(300,300)">
+          <!-- Halo arrastrable (fácil de agarrar con el dedo) -->
+          <circle r="105" fill="transparent"/>
+          <!-- Casco -->
+          <path d="M 0 -90 Q 28 -40 28 40 Q 28 75 0 90 Q -28 75 -28 40 Q -28 -40 0 -90 Z"
+                fill="#f5f3e7" stroke="#2c3e50" stroke-width="2.5"/>
+          <!-- Cubierta -->
+          <path d="M 0 -75 Q 20 -35 20 35 Q 20 65 0 78 Q -20 65 -20 35 Q -20 -35 0 -75 Z"
+                fill="#d4a574" stroke="#8b6914" stroke-width="1"/>
+          <!-- Punta de proa (indica hacia dónde va) -->
+          <path d="M 0 -92 L -6 -78 L 6 -78 Z" fill="#c0392b"/>
+          <!-- Mástil -->
+          <circle cx="0" cy="-15" r="4" fill="#2c3e50"/>
+          <!-- Vela mayor -->
+          <g id="velaMayor">
+            <line x1="0" y1="-15" x2="0" y2="55" stroke="#2c3e50" stroke-width="2"/>
+            <path id="lonaMayor" d="M 0 -15 Q 8 20 0 55 Z"
+                  fill="rgba(255,255,255,0.92)" stroke="#2c3e50" stroke-width="1.5"/>
+          </g>
+          <!-- Foque (vela de proa) -->
+          <g id="velaFoque">
+            <path id="lonaFoque" d="M 0 -75 Q 6 -50 0 -25 Z"
+                  fill="rgba(255,255,255,0.85)" stroke="#2c3e50" stroke-width="1.2"/>
+          </g>
+          <!-- Flecha circular indicando "gírame" -->
+          <g id="pistaGirar" opacity="0.65">
+            <path d="M 60 0 A 60 60 0 0 1 42 42" stroke="#f1c40f" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 42 42 L 36 32 L 50 36 Z" fill="#f1c40f"/>
+            <path d="M -60 0 A 60 60 0 0 0 -42 42" stroke="#f1c40f" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M -42 42 L -50 36 L -36 32 Z" fill="#f1c40f"/>
+          </g>
+        </g>
       </g>
     </svg>
 
     <div class="leyenda">
-      <span><i style="background:#c0392b"></i> Zona muerta — no se puede navegar</span>
-      <span><i style="background:#27ae60"></i> Se puede navegar</span>
-      <span><i style="background:#f1c40f"></i> De aquí viene el viento</span>
+      <span><i style="background:#c0392b"></i> Zona muerta (no se puede navegar)</span>
+      <span><i style="background:#27ae60"></i> Zona navegable</span>
+      <span><i style="background:#ecf0f1"></i> Viento</span>
     </div>
-    <p class="ayuda">👆 Arrastra el sol para cambiar la dirección del viento</p>
+    <p class="ayuda">👆 Toca y arrastra el barco para girarlo</p>
   </div>
 
   <div class="panel">
@@ -222,48 +256,35 @@
       <span id="textoConsejo">Velas a media abertura, formando unos 45° con el eje del barco.</span>
     </div>
 
-    <p class="pista">Ángulo del viento: <span id="angulo">90°</span></p>
+    <p class="pista">Ángulo respecto al viento: <span id="angulo">90°</span></p>
   </div>
 </div>
 
 <script>
 const svg = document.getElementById('diagrama');
-const indicador = document.getElementById('indicadorViento');
-const lineaViento = document.getElementById('lineaViento');
-const flechaViento = document.getElementById('flechaViento');
+const barco = document.getElementById('barco');
 const lonaMayor = document.getElementById('lonaMayor');
 const lonaFoque = document.getElementById('lonaFoque');
+const pistaGirar = document.getElementById('pistaGirar');
 const nombreRumbo = document.getElementById('nombreRumbo');
 const descripcionRumbo = document.getElementById('descripcionRumbo');
 const textoConsejo = document.getElementById('textoConsejo');
 const anguloLabel = document.getElementById('angulo');
 const sectoresG = document.getElementById('sectores');
 const etiquetasG = document.getElementById('etiquetas');
-const flechasVientoG = document.getElementById('flechasViento');
 
 const CX = 300, CY = 300;
-const R_INDICADOR = 220;
-const ZONA_MUERTA = 45; // ángulo a cada lado de la proa donde no se puede navegar
+const R = 250;
+const ZONA_MUERTA = 45;
 
-// El barco siempre apunta hacia arriba (proa = 0° en pantalla)
-// El ángulo del viento se mide desde la proa, en el sentido de las agujas del reloj
-// 0° = viento de proa (zona muerta), 90° = viento por estribor, 180° = viento de popa, 270° = viento por babor
-let anguloViento = 90; // por estribor por defecto
-
-// Definir los sectores de rumbos
-const sectores = [
-  { ini: -ZONA_MUERTA, fin: ZONA_MUERTA, color: '#c0392b', opacidad: 0.35, label: 'NO SE PUEDE\nNAVEGAR', labelR: 130 },
-];
+// Rumbo del barco: 0 = proa apuntando al viento (hacia arriba),
+// sentido horario (90 = hacia la derecha => viento por babor)
+let rumbo = 90;
 
 function gradosARad(g) { return (g - 90) * Math.PI / 180; }
-
-function puntoEnCirculo(cx, cy, r, angulo) {
-  return {
-    x: cx + r * Math.cos(gradosARad(angulo)),
-    y: cy + r * Math.sin(gradosARad(angulo))
-  };
+function puntoEnCirculo(cx, cy, r, ang) {
+  return { x: cx + r * Math.cos(gradosARad(ang)), y: cy + r * Math.sin(gradosARad(ang)) };
 }
-
 function dibujarSector(cx, cy, r, angIni, angFin, color, opacidad) {
   const p1 = puntoEnCirculo(cx, cy, r, angIni);
   const p2 = puntoEnCirculo(cx, cy, r, angFin);
@@ -272,221 +293,168 @@ function dibujarSector(cx, cy, r, angIni, angFin, color, opacidad) {
             fill="${color}" opacity="${opacidad}"/>`;
 }
 
-// Pintamos los sectores: zona muerta + zonas navegables
 function pintarSectores() {
   let html = '';
-  // Zona muerta de proa (rojo)
-  html += dibujarSector(CX, CY, R_INDICADOR, -ZONA_MUERTA, ZONA_MUERTA, '#c0392b', 0.35);
-  // Zonas navegables (verde) — todo lo demás
-  html += dibujarSector(CX, CY, R_INDICADOR, ZONA_MUERTA, 360 - ZONA_MUERTA, '#27ae60', 0.18);
+  // Zona muerta arriba (de donde viene el viento)
+  html += dibujarSector(CX, CY, R, -ZONA_MUERTA, ZONA_MUERTA, '#c0392b', 0.32);
+  // Zona navegable (el resto)
+  html += dibujarSector(CX, CY, R, ZONA_MUERTA, 360 - ZONA_MUERTA, '#27ae60', 0.16);
   sectoresG.innerHTML = html;
 }
 
-// Etiquetas de los rumbos alrededor del círculo
 function pintarEtiquetas() {
+  // Las etiquetas indican el rumbo cuando la PROA apunta a ese sector.
+  // 0° = arriba (proa al viento). Sentido horario.
   const rumbos = [
-    { ang: 0, txt: 'PROA AL VIENTO', sub: '(en facha)' },
-    { ang: 45, txt: 'CEÑIDA', sub: 'estribor' },
-    { ang: 90, txt: 'TRAVÉS', sub: 'estribor' },
-    { ang: 135, txt: 'LARGO', sub: 'estribor' },
-    { ang: 180, txt: 'EMPOPADA', sub: '(popa)' },
-    { ang: 225, txt: 'LARGO', sub: 'babor' },
-    { ang: 270, txt: 'TRAVÉS', sub: 'babor' },
-    { ang: 315, txt: 'CEÑIDA', sub: 'babor' }
+    { ang: 45,  txt: 'CEÑIDA',    sub: 'viento por babor' },
+    { ang: 90,  txt: 'TRAVÉS',    sub: 'viento por babor' },
+    { ang: 135, txt: 'LARGO',     sub: 'viento por babor' },
+    { ang: 180, txt: 'EMPOPADA',  sub: 'viento de popa' },
+    { ang: 225, txt: 'LARGO',     sub: 'viento por estribor' },
+    { ang: 270, txt: 'TRAVÉS',    sub: 'viento por estribor' },
+    { ang: 315, txt: 'CEÑIDA',    sub: 'viento por estribor' }
   ];
   let html = '';
   rumbos.forEach(r => {
-    const p = puntoEnCirculo(CX, CY, 255, r.ang);
-    html += `<text x="${p.x}" y="${p.y}" font-size="12" font-weight="700">${r.txt}</text>`;
+    const p = puntoEnCirculo(CX, CY, 275, r.ang);
+    html += `<text x="${p.x}" y="${p.y - 2}">${r.txt}</text>`;
     html += `<text x="${p.x}" y="${p.y + 14}" font-size="10" font-weight="400" opacity="0.85">${r.sub}</text>`;
   });
   etiquetasG.innerHTML = html;
 }
 
-// Flechas que muestran de dónde viene el viento (decorativas)
-function pintarFlechasViento() {
-  let html = '';
-  for (let a = 0; a < 360; a += 30) {
-    const p1 = puntoEnCirculo(CX, CY, 285, a);
-    const p2 = puntoEnCirculo(CX, CY, 270, a);
-    html += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>`;
-  }
-  flechasVientoG.innerHTML = html;
-}
-
 pintarSectores();
 pintarEtiquetas();
-pintarFlechasViento();
 
-// Determina rumbo y configuración de velas según ángulo
-function calcularRumbo(ang) {
-  // Normalizar a [0, 360)
-  let a = ((ang % 360) + 360) % 360;
-  // Convertir a ángulo absoluto desde proa (0 a 180)
+// Dado el rumbo del barco (ángulo de su proa respecto al viento arriba),
+// calcular qué hacer con las velas y qué rumbo es.
+function calcularRumbo(r) {
+  let a = ((r % 360) + 360) % 360;
+  // abs: ángulo entre la proa y la dirección del viento (0-180)
   const abs = a > 180 ? 360 - a : a;
-  const ladoBabor = a > 180; // si > 180, viene por babor
-  const lado = ladoBabor ? 'babor' : 'estribor';
+  // Lado desde el que entra el viento al barco:
+  // - si 0 < rumbo < 180  => la proa apunta a la derecha => el viento (que cae desde arriba)
+  //   entra por el lado IZQUIERDO del barco = BABOR
+  // - si 180 < rumbo < 360 => la proa apunta a la izquierda => viento por ESTRIBOR
+  const vientoPorBabor = (a > 0 && a < 180);
+  const lado = vientoPorBabor ? 'babor' : 'estribor';
 
   if (abs < ZONA_MUERTA) {
     return {
       nombre: '⚠ Zona muerta',
-      desc: 'El viento viene demasiado de proa. El barco se para y las velas flamean (pierden forma). NO SE PUEDE NAVEGAR a menos de unos 45° del viento.',
-      consejo: 'Hay que cambiar de rumbo: virar a babor o estribor para alejarse del viento al menos 45°. Si quieres ir contra el viento, tendrás que ir en zigzag (CEÑIDA por un lado, virar, y CEÑIDA por el otro).',
-      anguloVelaMayor: 0,  // velas sueltas, flameando
-      anguloFoque: 0,
-      flameando: true,
-      lado: lado
+      desc: 'El viento viene demasiado de proa. Las velas flamean (no cogen viento) y el barco se para. NO SE PUEDE NAVEGAR a menos de unos 45° del viento.',
+      consejo: 'Gira el barco al menos 45° hacia un lado. Para ir contra el viento hay que zigzaguear: CEÑIDA por un bordo, VIRAR, y CEÑIDA por el otro.',
+      magnitud: 0, flameando: true, lado
     };
   }
   if (abs < 60) {
     return {
       nombre: 'Ceñida — ' + lado,
-      desc: 'Es el rumbo más cerrado al viento que se puede navegar (~45° del viento). El barco escora y va lento pero gana barlovento.',
-      consejo: 'Velas MUY TENSADAS, casi pegadas al eje del barco. La botavara casi en el centro. Ajusta hasta que las velas dejen de flamear.',
-      anguloVelaMayor: 15,
-      anguloFoque: 12,
-      flameando: false,
-      lado: lado
+      desc: 'Rumbo más cerrado posible al viento (~45°). El barco escora y avanza poco a poco ganando barlovento.',
+      consejo: 'Velas MUY TENSADAS, casi pegadas al eje del barco. Ajusta la escota hasta que la vela deje de flamear.',
+      magnitud: 18, magFoque: 14, flameando: false, lado
     };
   }
   if (abs < 110) {
     return {
       nombre: 'Través — ' + lado,
-      desc: 'El viento entra perpendicular al barco. Es el rumbo más rápido y cómodo de todos.',
-      consejo: 'Velas a MEDIA ABERTURA, formando unos 45° con el eje del barco. Es el rumbo más fácil para principiantes.',
-      anguloVelaMayor: 45,
-      anguloFoque: 35,
-      flameando: false,
-      lado: lado
+      desc: 'Viento perpendicular al barco (~90°). Es el rumbo más rápido y cómodo, ideal para aprender.',
+      consejo: 'Velas A MEDIA ABERTURA, unos 45° respecto al eje del barco.',
+      magnitud: 45, magFoque: 38, flameando: false, lado
     };
   }
   if (abs < 160) {
     return {
       nombre: 'Largo — ' + lado,
-      desc: 'El viento entra por detrás y por el costado. Rumbo rápido y muy estable.',
-      consejo: 'Velas BIEN ABIERTAS, casi perpendiculares al eje del barco (unos 60-70°). Aprovecha al máximo el empuje del viento.',
-      anguloVelaMayor: 65,
-      anguloFoque: 55,
-      flameando: false,
-      lado: lado
+      desc: 'Viento entrando por detrás y por el costado. Rumbo rápido y estable.',
+      consejo: 'Velas BIEN ABIERTAS (unos 60-70°). Dejas que el viento empuje.',
+      magnitud: 65, magFoque: 55, flameando: false, lado
     };
   }
-  // 160-180: empopada
   return {
-    nombre: 'Empopada (popa redonda)',
-    desc: 'El viento viene por detrás (de popa). El barco va empujado, sin escora pero más lento de lo que parece.',
-    consejo: 'Velas TOTALMENTE ABIERTAS, perpendiculares (90°) al barco. Truco: vela mayor a un lado y foque al otro (en "orejas de burro") para captar más viento.',
-    anguloVelaMayor: 88,
-    anguloFoque: -88, // al lado contrario (orejas de burro)
-    flameando: false,
-    lado: lado,
-    empopada: true
+    nombre: 'Empopada',
+    desc: 'Viento por la popa. El barco va empujado sin escora, pero con menos velocidad de la que parece (navegas a la misma velocidad que el viento menos el empuje real).',
+    consejo: 'Velas CASI PERPENDICULARES al barco (90°). Truco: mayor a un lado y foque al contrario (“orejas de burro”) para captar más viento.',
+    magnitud: 88, magFoque: 88, flameando: false, lado, empopada: true
   };
 }
 
-// Aplica la configuración visual de las velas
-function aplicarVelas(config) {
-  // Si flameando: velas alineadas con eje del barco y "onduladas"
-  let aMayor = config.anguloVelaMayor;
-  let aFoque = config.anguloFoque;
-
-  // El signo del ángulo depende del lado: si viento por estribor (lado derecho),
-  // las velas van al lado opuesto (babor / izquierda en pantalla = ángulo negativo)
-  const signo = config.lado === 'estribor' ? -1 : 1;
-  aMayor = signo * aMayor;
-  if (!config.empopada) aFoque = signo * aFoque;
-
-  if (config.flameando) {
-    // Velas centradas y "rotas" para sugerir que flamean
-    lonaMayor.setAttribute('d', 'M 0 -15 Q 2 20 0 55 Q -2 35 0 20 Q 2 5 0 -15 Z');
-    lonaMayor.setAttribute('opacity', '0.6');
-    lonaFoque.setAttribute('d', 'M 0 -75 Q 2 -50 0 -25 Q -2 -40 0 -75 Z');
-    lonaFoque.setAttribute('opacity', '0.6');
+// Aplica el ángulo a las velas. En el frame local del barco (proa arriba),
+// un ángulo positivo rota la vela hacia ESTRIBOR (derecha del barco).
+// Las velas van SIEMPRE a sotavento = lado opuesto al viento.
+//   - viento por babor  => velas a estribor => ángulo positivo
+//   - viento por estribor => velas a babor => ángulo negativo
+function aplicarVelas(cfg) {
+  if (cfg.flameando) {
+    lonaMayor.setAttribute('d', 'M 0 -15 Q 3 5 -3 35 Q 2 45 0 55 Z');
+    lonaMayor.setAttribute('opacity', '0.55');
+    lonaFoque.setAttribute('d', 'M 0 -75 Q -2 -60 3 -40 Q 0 -30 0 -25 Z');
+    lonaFoque.setAttribute('opacity', '0.55');
     document.getElementById('velaMayor').setAttribute('transform', 'rotate(0)');
     document.getElementById('velaFoque').setAttribute('transform', 'rotate(0)');
     return;
   }
+  const signo = cfg.lado === 'babor' ? +1 : -1;
+  const aMayor = signo * cfg.magnitud;
+  const aFoque = cfg.empopada ? -signo * cfg.magFoque : signo * cfg.magFoque; // orejas de burro en popa
 
+  const panzaMayor = 6 + (cfg.magnitud / 90) * 14;
+  lonaMayor.setAttribute('d', `M 0 -15 Q ${panzaMayor} 20 0 55 Z`);
   lonaMayor.setAttribute('opacity', '0.95');
+
+  const panzaFoque = 4 + (cfg.magFoque / 90) * 10;
+  lonaFoque.setAttribute('d', `M 0 -75 Q ${panzaFoque} -50 0 -25 Z`);
   lonaFoque.setAttribute('opacity', '0.9');
 
-  // Recalcular forma de la vela (curvatura) - cuanto más cerrada, menos panza
-  const panzaMayor = 6 + (Math.abs(config.anguloVelaMayor) / 90) * 14;
-  lonaMayor.setAttribute('d', `M 0 -15 Q ${panzaMayor} 20 0 55 Z`);
-
-  const panzaFoque = 4 + (Math.abs(config.anguloFoque) / 90) * 10;
-  lonaFoque.setAttribute('d', `M 0 -75 Q ${panzaFoque} -50 0 -25 Z`);
-
-  // Rotar las velas
-  document.getElementById('velaMayor').setAttribute('transform',
-    `rotate(${aMayor} 0 -15)`);
-  document.getElementById('velaFoque').setAttribute('transform',
-    `rotate(${aFoque} 0 -75)`);
+  document.getElementById('velaMayor').setAttribute('transform', `rotate(${aMayor} 0 -15)`);
+  document.getElementById('velaFoque').setAttribute('transform', `rotate(${aFoque} 0 -75)`);
 }
 
 function actualizar() {
-  // Posicionar el sol y la línea según el ángulo del viento
-  const p = puntoEnCirculo(CX, CY, R_INDICADOR, anguloViento);
-  lineaViento.setAttribute('x2', p.x);
-  lineaViento.setAttribute('y2', p.y);
-  flechaViento.setAttribute('transform', `translate(${p.x},${p.y})`);
+  // El SVG del barco está dibujado con la proa hacia ARRIBA (y negativo).
+  // Para que apunte a un "rumbo" medido desde el viento (0 = arriba, horario),
+  // basta con rotar el grupo ese mismo ángulo.
+  barco.setAttribute('transform', `rotate(${rumbo} ${CX} ${CY})`);
 
-  const cfg = calcularRumbo(anguloViento);
+  const cfg = calcularRumbo(rumbo);
   nombreRumbo.textContent = cfg.nombre;
   descripcionRumbo.textContent = cfg.desc;
   textoConsejo.textContent = cfg.consejo;
-  anguloLabel.textContent = Math.round(((anguloViento % 360) + 360) % 360) + '°';
-
-  // Color del rumbo según situación
-  const a = ((anguloViento % 360) + 360) % 360;
-  const abs = a > 180 ? 360 - a : a;
-  if (abs < ZONA_MUERTA) {
-    nombreRumbo.style.color = '#c0392b';
-  } else {
-    nombreRumbo.style.color = '#0a3d62';
-  }
+  const aNorm = ((rumbo % 360) + 360) % 360;
+  const abs = aNorm > 180 ? 360 - aNorm : aNorm;
+  anguloLabel.textContent = Math.round(abs) + '°';
+  nombreRumbo.style.color = (abs < ZONA_MUERTA) ? '#c0392b' : '#0a3d62';
 
   aplicarVelas(cfg);
+
+  // Ocultar la pista de "girar" en cuanto el usuario mueva el barco
+  if (Math.abs(rumbo - 90) > 2) pistaGirar.setAttribute('opacity', '0');
 }
 
-// Arrastre del indicador
+// Arrastre: se calcula el ángulo desde el centro al dedo/ratón.
 let arrastrando = false;
 function obtenerPunto(evt) {
   const pt = svg.createSVGPoint();
-  if (evt.touches && evt.touches[0]) {
-    pt.x = evt.touches[0].clientX;
-    pt.y = evt.touches[0].clientY;
-  } else {
-    pt.x = evt.clientX;
-    pt.y = evt.clientY;
-  }
+  const e = evt.touches ? evt.touches[0] : evt;
+  pt.x = e.clientX; pt.y = e.clientY;
   return pt.matrixTransform(svg.getScreenCTM().inverse());
 }
-
 function actualizarDesdeEvento(evt) {
   const p = obtenerPunto(evt);
   const dx = p.x - CX;
   const dy = p.y - CY;
-  // ángulo en grados, 0° arriba, sentido horario
+  // atan2(dx, -dy): 0° arriba, sentido horario
   let ang = Math.atan2(dx, -dy) * 180 / Math.PI;
   if (ang < 0) ang += 360;
-  anguloViento = ang;
+  rumbo = ang;
   actualizar();
 }
-
-indicador.addEventListener('mousedown', (e) => { arrastrando = true; actualizarDesdeEvento(e); });
+barco.addEventListener('mousedown', (e) => { arrastrando = true; actualizarDesdeEvento(e); });
 window.addEventListener('mousemove', (e) => { if (arrastrando) actualizarDesdeEvento(e); });
 window.addEventListener('mouseup', () => { arrastrando = false; });
-
-indicador.addEventListener('touchstart', (e) => { arrastrando = true; actualizarDesdeEvento(e); e.preventDefault(); }, {passive:false});
+barco.addEventListener('touchstart', (e) => { arrastrando = true; actualizarDesdeEvento(e); e.preventDefault(); }, {passive:false});
 window.addEventListener('touchmove', (e) => { if (arrastrando) { actualizarDesdeEvento(e); e.preventDefault(); } }, {passive:false});
 window.addEventListener('touchend', () => { arrastrando = false; });
-
-// Permitir hacer clic en cualquier parte del SVG para mover el viento
-svg.addEventListener('click', (e) => {
-  if (e.target.closest('#barco')) return;
-  actualizarDesdeEvento(e);
-});
 
 actualizar();
 </script>
